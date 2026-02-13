@@ -29,7 +29,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Status>().ToTable("Statuses");
         modelBuilder.Entity<BookingStatusHistory>().ToTable("BookingStatusHistories");
 
-        // Query filters for soft-delete (exclude IsDeleted == true)
+        // Query filters for soft-delete
         modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsDeleted);
         modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
         modelBuilder.Entity<Room>().HasQueryFilter(r => !r.IsDeleted);
@@ -73,6 +73,21 @@ public class AppDbContext : DbContext
             .WithOne(bsh => bsh.Status)
             .HasForeignKey(bsh => bsh.StatusId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Data seeding
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = Guid.NewGuid(), Name = "Admin" },
+            new Role { Id = Guid.NewGuid(), Name = "Staff" },
+            new Role { Id = Guid.NewGuid(), Name = "Lecturer" },
+            new Role { Id = Guid.NewGuid(), Name = "Student" }
+        );
+
+        modelBuilder.Entity<Status>().HasData(
+            new Status { Id = Guid.NewGuid(), Name = "Pending" },
+            new Status { Id = Guid.NewGuid(), Name = "Approved" },
+            new Status { Id = Guid.NewGuid(), Name = "Rejected" },
+            new Status { Id = Guid.NewGuid(), Name = "Cancelled" }
+        );
     }
 
     private void ApplyChanges()
@@ -83,16 +98,19 @@ public class AppDbContext : DbContext
         {
             var entity = (BaseEntity)entry.Entity;
 
+            // CreatedAt 
             if (entry.State == EntityState.Added)
             {
                 entity.CreatedAt = entity.CreatedAt == default ? now : entity.CreatedAt;
             }
 
+            // UpdatedAt
             if (entry.State == EntityState.Modified)
             {
                 entity.UpdatedAt = now;
             }
 
+            // Soft Delete
             if (entry.State == EntityState.Deleted)
             {
                 entity.IsDeleted = true;
@@ -102,6 +120,7 @@ public class AppDbContext : DbContext
         }
     }
 
+    // Override SaveChanges methods to apply changes
     public override int SaveChanges()
     {
         ApplyChanges();
@@ -125,6 +144,8 @@ public class AppDbContext : DbContext
         ApplyChanges();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
+
+
 
     public AppDbContext() { }
 }
