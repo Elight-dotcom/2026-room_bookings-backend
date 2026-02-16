@@ -30,11 +30,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<BookingStatusHistory>().ToTable("BookingStatusHistories");
 
         // Query filters for soft-delete
-        modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsDeleted);
         modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
         modelBuilder.Entity<Room>().HasQueryFilter(r => !r.IsDeleted);
         modelBuilder.Entity<Booking>().HasQueryFilter(b => !b.IsDeleted);
-        modelBuilder.Entity<Status>().HasQueryFilter(s => !s.IsDeleted);
         modelBuilder.Entity<BookingStatusHistory>().HasQueryFilter(bsh => !bsh.IsDeleted);
 
         // Relationships
@@ -76,17 +74,31 @@ public class AppDbContext : DbContext
 
         // Data seeding
         modelBuilder.Entity<Role>().HasData(
-            new Role { Id = Guid.NewGuid(), Name = "Admin" },
-            new Role { Id = Guid.NewGuid(), Name = "Staff" },
-            new Role { Id = Guid.NewGuid(), Name = "Lecturer" },
-            new Role { Id = Guid.NewGuid(), Name = "Student" }
+            new Role { Id = 1, Name = "Admin" },
+            new Role { Id = 2, Name = "Staff" },
+            new Role { Id = 3, Name = "Lecturer" },
+            new Role { Id = 4, Name = "Student" }
         );
 
         modelBuilder.Entity<Status>().HasData(
-            new Status { Id = Guid.NewGuid(), Name = "Pending" },
-            new Status { Id = Guid.NewGuid(), Name = "Approved" },
-            new Status { Id = Guid.NewGuid(), Name = "Rejected" },
-            new Status { Id = Guid.NewGuid(), Name = "Cancelled" }
+            new Status { Id = 1, Name = "Pending" },
+            new Status { Id = 2, Name = "Approved" },
+            new Status { Id = 3, Name = "Rejected" },
+            new Status { Id = 4, Name = "Cancelled" }
+        );
+
+        modelBuilder.Entity<Room>().HasData(
+            new Room { Id = 1, Name = "SAW 01.01", Location = "SAW", Capacity = 120, Description = "projector, whiteboard, speaker", IsAvailable = true, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new Room { Id = 2, Name = "C 201", Location = "D4", Capacity = 90, Description = "projector, whiteboard", IsAvailable = true, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new Room { Id = 3, Name = "HH 101", Location = "D3", Capacity = 30, Description = "projector, whiteboard", IsAvailable = true, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new Room { Id = 4, Name = "HH 102", Location = "D3", Capacity = 30, Description = "whiteboard", IsAvailable = false, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User { Id = 1, Name = "Admin", Email = "admin@pens.ac.id", Password = "password", RoleId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new User { Id = 2, Name = "Egit", Email = "egit@pens.ac.id", Password = "password", RoleId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new User { Id = 3, Name = "Saki", Email = "saki@pens.ac.id", Password = "password", RoleId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new User { Id = 4, Name = "Toriq", Email = "toriq@pens.ac.id", Password = "password", RoleId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
         );
     }
 

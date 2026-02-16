@@ -12,7 +12,7 @@ using RoomBookingsApi.Data;
 namespace RoomBookingsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260213151940_InitialCreate")]
+    [Migration("20260215142044_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,14 +27,16 @@ namespace RoomBookingsApi.Migrations
 
             modelBuilder.Entity("RoomBookingsApi.Models.Booking", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateOnly>("BookingDate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -50,20 +52,20 @@ namespace RoomBookingsApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("RoomId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time without time zone");
 
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -78,23 +80,25 @@ namespace RoomBookingsApi.Migrations
 
             modelBuilder.Entity("RoomBookingsApi.Models.BookingStatusHistory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("ChangedBy")
-                        .HasColumnType("uuid");
+                    b.Property<int>("ChangedBy")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("ChangedByUserId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("ChangedByUserId")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -106,8 +110,8 @@ namespace RoomBookingsApi.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("StatusId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -125,41 +129,55 @@ namespace RoomBookingsApi.Migrations
 
             modelBuilder.Entity("RoomBookingsApi.Models.Role", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
 
                     b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Staff"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Lecturer"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Student"
+                        });
                 });
 
             modelBuilder.Entity("RoomBookingsApi.Models.Room", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -189,42 +207,102 @@ namespace RoomBookingsApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "projector, whiteboard, speaker",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            Location = "SAW",
+                            Name = "SAW 01.01"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacity = 90,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "projector, whiteboard",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            Location = "D4",
+                            Name = "C 201"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "projector, whiteboard",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            Location = "D3",
+                            Name = "HH 101"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "whiteboard",
+                            IsAvailable = false,
+                            IsDeleted = false,
+                            Location = "D3",
+                            Name = "HH 102"
+                        });
                 });
 
             modelBuilder.Entity("RoomBookingsApi.Models.Status", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
 
                     b.ToTable("Statuses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pending"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Approved"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Rejected"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Cancelled"
+                        });
                 });
 
             modelBuilder.Entity("RoomBookingsApi.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -249,8 +327,8 @@ namespace RoomBookingsApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -260,6 +338,52 @@ namespace RoomBookingsApi.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "admin@pens.ac.id",
+                            IsDeleted = false,
+                            NRP = "",
+                            Name = "Admin",
+                            Password = "password",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "egit@pens.ac.id",
+                            IsDeleted = false,
+                            NRP = "",
+                            Name = "Egit",
+                            Password = "password",
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "saki@pens.ac.id",
+                            IsDeleted = false,
+                            NRP = "",
+                            Name = "Saki",
+                            Password = "password",
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "toriq@pens.ac.id",
+                            IsDeleted = false,
+                            NRP = "",
+                            Name = "Toriq",
+                            Password = "password",
+                            RoleId = 4
+                        });
                 });
 
             modelBuilder.Entity("RoomBookingsApi.Models.Booking", b =>
