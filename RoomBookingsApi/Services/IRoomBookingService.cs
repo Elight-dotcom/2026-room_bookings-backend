@@ -1,13 +1,14 @@
 using System;
+using RoomBookingsApi.DTOs.Booking;
 using RoomBookingsApi.Models;
 
 namespace RoomBookingsApi.Services;
 
 public interface IRoomBookingService
 {
-    Task<List<Booking>> GetAllRoomBookings();
-    Task<Booking?> GetRoomBooking(int id);
-    Task<Booking> Add(Booking booking);
-    Task<Booking> Update(int id, Booking booking);
+    Task<List<BookingResponseDto>> GetAllRoomBookings();
+    Task<BookingResponseDto?> GetRoomBooking(int id);
+    Task<BookingResponseDto> Add(AddBookingDto booking);
+    Task<BookingResponseDto> Update(int id, UpdateBookingDto booking);
     Task<bool> Delete(int id);
 }

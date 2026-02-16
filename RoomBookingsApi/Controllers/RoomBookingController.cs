@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RoomBookingsApi.DTOs.Booking;
 using RoomBookingsApi.Models;
 using RoomBookingsApi.Services;
 
@@ -32,14 +33,14 @@ namespace RoomBookingsApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRoomBooking(Booking booking)
+        public async Task<IActionResult> AddRoomBooking(AddBookingDto booking)
         {
             var roomBooking = await _roomBookingService.Add(booking);
             return CreatedAtAction(nameof(GetRoomBooking), new { id = roomBooking.Id }, roomBooking);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRoomBooking(int id, Booking booking)
+        public async Task<IActionResult> UpdateRoomBooking(int id, UpdateBookingDto booking)
         {
             var updatedRoomBooking = await _roomBookingService.Update(id, booking);
             if (updatedRoomBooking == null) return NotFound();

@@ -5,19 +5,12 @@ namespace RoomBookingsApi.DTOs.Booking;
 
 public class UpdateBookingDto
 {
-    [Required]
     public int UserId { get; set; }
-
-    [Required]
     public int RoomId { get; set; }
 
-    [Required]
-    public DateTime BookingDate { get; set; }
-    [Required]
-    public DateTime StartTime { get; set; }
-    [Required]
-    public DateTime EndTime { get; set; }
+    public DateOnly BookingDate { get; set; }
+    public TimeOnly StartTime { get; set; }
+    public TimeOnly EndTime { get; set; }
 
-    [Required]
     public string Purpose { get; set; } = string.Empty;
 }
