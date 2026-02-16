@@ -136,7 +136,6 @@ namespace RoomBookingsApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BookingId = table.Column<int>(type: "integer", nullable: false),
-                    ChangedBy = table.Column<int>(type: "integer", nullable: false),
                     ChangedByUserId = table.Column<int>(type: "integer", nullable: false),
                     StatusId = table.Column<int>(type: "integer", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: true),

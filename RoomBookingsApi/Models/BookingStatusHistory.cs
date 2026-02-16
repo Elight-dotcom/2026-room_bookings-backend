@@ -7,7 +7,7 @@ public class BookingStatusHistory : BaseEntity
     public int BookingId { get; set; }
     public Booking Booking { get; set; } = null!;
 
-    public int ChangedBy { get; set; }
+    public int ChangedByUserId { get; set; }
     public User ChangedByUser { get; set; } = null!;
 
     public int StatusId { get; set; }

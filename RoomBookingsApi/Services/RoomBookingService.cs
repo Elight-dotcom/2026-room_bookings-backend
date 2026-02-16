@@ -177,4 +177,36 @@ public class RoomBookingService : IRoomBookingService
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<BookingResponseDto> ChangeStatus(int id, ChangeStatusDto changeStatus)
+    {
+        var booking = await _context.Bookings.FindAsync(id);
+        if (booking == null) throw new InvalidOperationException("Booking not found");
+
+        booking.StatusId = changeStatus.StatusId;
+
+        var newStatusHistory = new BookingStatusHistory
+        {
+            BookingId = booking.Id,
+            StatusId = changeStatus.StatusId,
+            ChangedByUserId = 2,
+            Note = changeStatus.Note,
+            ChangedAt = DateTime.UtcNow
+        };
+
+        _context.BookingStatusHistories.Add(newStatusHistory);
+
+        await _context.SaveChangesAsync();
+        return new BookingResponseDto
+        {
+            Id = booking.Id,
+            RoomId = booking.RoomId,
+            UserId = booking.UserId,
+            BookingDate = booking.BookingDate,
+            StartTime = booking.StartTime,
+            EndTime = booking.EndTime,
+            Purpose = booking.Purpose,
+            StatusId = booking.StatusId
+        };
+    }
 }

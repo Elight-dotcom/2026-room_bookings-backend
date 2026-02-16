@@ -12,7 +12,7 @@ using RoomBookingsApi.Data;
 namespace RoomBookingsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260215142044_InitialCreate")]
+    [Migration("20260216183006_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -91,9 +91,6 @@ namespace RoomBookingsApi.Migrations
 
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ChangedBy")
-                        .HasColumnType("integer");
 
                     b.Property<int>("ChangedByUserId")
                         .HasColumnType("integer");

@@ -89,9 +89,6 @@ namespace RoomBookingsApi.Migrations
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ChangedBy")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ChangedByUserId")
                         .HasColumnType("integer");
 

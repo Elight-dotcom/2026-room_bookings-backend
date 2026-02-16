@@ -76,5 +76,20 @@ namespace RoomBookingsApi.Controllers
             if (!result) return NotFound();
             return NoContent();
         }
+
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> ChangeBookingStatus(int id, ChangeStatusDto changeStatus)
+        {
+            try
+            {
+                var updatedBooking = await _roomBookingService.ChangeStatus(id, changeStatus);
+                if (updatedBooking == null) return NotFound();
+                return Ok(updatedBooking);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
