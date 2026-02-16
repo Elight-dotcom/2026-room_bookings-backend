@@ -27,6 +27,7 @@
     <Folder Include="Data\" />
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\Booking\" />
+    <Folder Include="DTOs\Room\" />
     <Folder Include="DTOs\User\" />
   </ItemGroup>
 

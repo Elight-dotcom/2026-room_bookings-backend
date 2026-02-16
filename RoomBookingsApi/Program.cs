@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen();
 // Register Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoomBookingService, RoomBookingService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 
 var app = builder.Build();
