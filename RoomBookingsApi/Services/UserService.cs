@@ -24,4 +24,9 @@ public class UserService : IUserService
     {
         return await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == id);
     }
+
+    public async Task<List<User>> SearchUsers(string name)
+    {
+        return await _context.Users.Include(u => u.Role).Where(u => u.Name.ToLower().Contains(name.ToLower())).ToListAsync();
+    }
 }

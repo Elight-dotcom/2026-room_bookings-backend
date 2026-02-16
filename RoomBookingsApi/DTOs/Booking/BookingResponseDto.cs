@@ -19,4 +19,5 @@ public class BookingResponseDto
     public TimeOnly EndTime { get; set; }
     public string Purpose { get; set; } = string.Empty;
     public int StatusId { get; set; }
+    public string StatusName { get; set; } = null!;
 }

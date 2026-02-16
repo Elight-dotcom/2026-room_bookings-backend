@@ -19,20 +19,20 @@ public class RoomBookingService : IRoomBookingService
     public async Task<List<BookingResponseDto>> GetAllRoomBookings()
     {
         var bookings = await _context.Bookings.Include(rb => rb.Room).Include(rb => rb.User).ToListAsync();
-        return bookings.Select(b => new BookingResponseDto
+        return bookings.Select(booking => new BookingResponseDto
         {
-            Id = b.Id,
-            RoomId = b.RoomId,
-            RoomName = b.Room.Name,
-            RoomLocation = b.Room.Location,
-            UserId = b.UserId,
-            UserName = b.User.Name,
-            UserNRP = b.User.NRP,
-            BookingDate = b.BookingDate,
-            StartTime = b.StartTime,
-            EndTime = b.EndTime,
-            Purpose = b.Purpose,
-            StatusId = b.StatusId
+            Id = booking.Id,
+            RoomId = booking.RoomId,
+            RoomName = booking.Room.Name,
+            RoomLocation = booking.Room.Location,
+            UserId = booking.UserId,
+            UserName = booking.User.Name,
+            UserNRP = booking.User.NRP,
+            BookingDate = booking.BookingDate,
+            StartTime = booking.StartTime,
+            EndTime = booking.EndTime,
+            Purpose = booking.Purpose,
+            StatusId = booking.StatusId
         }).ToList();
     }
 
@@ -54,6 +54,7 @@ public class RoomBookingService : IRoomBookingService
             StartTime = booking.StartTime,
             EndTime = booking.EndTime,
             Purpose = booking.Purpose,
+            StatusId = booking.StatusId
         };
     }
 
@@ -82,7 +83,7 @@ public class RoomBookingService : IRoomBookingService
             StartTime = newBooking.StartTime,
             EndTime = newBooking.EndTime,
             Purpose = newBooking.Purpose,
-            StatusId = newBooking.StatusId
+            StatusId = newBooking.StatusId,
         };
     }
 

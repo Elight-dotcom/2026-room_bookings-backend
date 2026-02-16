@@ -17,6 +17,32 @@ namespace RoomBookingsApi.Controllers
             _userService = userService;
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string? searchTerm)
+        {
+            List<User> users;
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                users = await _userService.GetAllUsers();
+            }
+            else
+            {
+                users = await _userService.SearchUsers(searchTerm);
+            }
+
+            var result = users.Select(u => new UserResponseDto
+            {
+                Id = u.Id,
+                Name = u.Name,
+                NRP = u.NRP,
+                Email = u.Email,
+                Role = u.Role.Name,
+                CreatedAt = u.CreatedAt ?? DateTime.UtcNow
+            });
+
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -35,7 +61,7 @@ namespace RoomBookingsApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _userService.GetUser(id);
