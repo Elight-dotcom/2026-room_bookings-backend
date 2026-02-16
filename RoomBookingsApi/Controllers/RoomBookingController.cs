@@ -17,6 +17,13 @@ namespace RoomBookingsApi.Controllers
             _roomBookingService = roomBookingService;
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchRoomBookings([FromQuery] string? searchTerm, [FromQuery] int? roomId, [FromQuery] DateOnly? bookingDate)
+        {
+            var roomBookings = await _roomBookingService.SearchRoomBookings(searchTerm, roomId, bookingDate);
+            return Ok(roomBookings);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllRoomBookings()
         {

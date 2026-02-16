@@ -16,6 +16,44 @@ public class RoomBookingService : IRoomBookingService
         _context = context;
     }
 
+    public async Task<List<BookingResponseDto>> SearchRoomBookings(string? searchTerm, int? roomId, DateOnly? bookingDate)
+    {
+        var query = _context.Bookings.Include(rb => rb.Room).Include(rb => rb.User).AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(b => b.User.Name.ToLower().Contains(searchTerm.ToLower()));
+        }
+
+        if (roomId.HasValue)
+        {
+            query = query.Where(b => b.RoomId == roomId.Value);
+        }
+
+        if (bookingDate.HasValue)
+        {
+            query = query.Where(b => b.BookingDate == bookingDate.Value);
+        }
+
+        var bookings = await query.ToListAsync();
+
+        return bookings.Select(booking => new BookingResponseDto
+        {
+            Id = booking.Id,
+            RoomId = booking.RoomId,
+            RoomName = booking.Room.Name,
+            RoomLocation = booking.Room.Location,
+            UserId = booking.UserId,
+            UserName = booking.User.Name,
+            UserNRP = booking.User.NRP,
+            BookingDate = booking.BookingDate,
+            StartTime = booking.StartTime,
+            EndTime = booking.EndTime,
+            Purpose = booking.Purpose,
+            StatusId = booking.StatusId
+        }).ToList();
+    }
+
     public async Task<List<BookingResponseDto>> GetAllRoomBookings()
     {
         var bookings = await _context.Bookings.Include(rb => rb.Room).Include(rb => rb.User).ToListAsync();

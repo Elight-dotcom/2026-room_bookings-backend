@@ -6,6 +6,7 @@ namespace RoomBookingsApi.Services;
 
 public interface IRoomBookingService
 {
+    Task<List<BookingResponseDto>> SearchRoomBookings(string? searchTerm, int? roomId, DateOnly? bookingDate);
     Task<List<BookingResponseDto>> GetAllRoomBookings();
     Task<BookingResponseDto?> GetRoomBooking(int id);
     Task<BookingResponseDto> Add(AddBookingDto booking);
