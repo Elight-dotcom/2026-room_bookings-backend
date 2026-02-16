@@ -42,16 +42,31 @@ namespace RoomBookingsApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRoomBooking(AddBookingDto booking)
         {
-            var roomBooking = await _roomBookingService.Add(booking);
-            return CreatedAtAction(nameof(GetRoomBooking), new { id = roomBooking.Id }, roomBooking);
+            try
+            {
+                var roomBooking = await _roomBookingService.Add(booking);
+
+                return CreatedAtAction(nameof(GetRoomBooking), new { id = roomBooking.Id }, roomBooking);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRoomBooking(int id, UpdateBookingDto booking)
         {
-            var updatedRoomBooking = await _roomBookingService.Update(id, booking);
-            if (updatedRoomBooking == null) return NotFound();
-            return Ok(updatedRoomBooking);
+            try
+            {
+                var updatedRoomBooking = await _roomBookingService.Update(id, booking);
+                if (updatedRoomBooking == null) return NotFound();
+                return Ok(updatedRoomBooking);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]

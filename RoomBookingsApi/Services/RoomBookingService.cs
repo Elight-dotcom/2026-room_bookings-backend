@@ -98,6 +98,14 @@ public class RoomBookingService : IRoomBookingService
 
     public async Task<BookingResponseDto> Add(AddBookingDto booking)
     {
+        var notAvaible = await _context.Bookings.AnyAsync(b =>
+            b.RoomId == booking.RoomId &&
+            b.BookingDate == booking.BookingDate &&
+            ((booking.StartTime >= b.StartTime && booking.StartTime < b.EndTime) ||
+                (booking.EndTime > b.StartTime && booking.EndTime <= b.EndTime) ||
+                (booking.StartTime <= b.StartTime && booking.EndTime >= b.EndTime)));
+        if (notAvaible) throw new InvalidOperationException("Room is being used by another booking");
+
         var newBooking = new Booking
         {
             RoomId = booking.RoomId,
@@ -129,6 +137,14 @@ public class RoomBookingService : IRoomBookingService
     {
         var existingBooking = await _context.Bookings.FindAsync(id);
         if (existingBooking == null) throw new InvalidOperationException("Booking not found");
+
+        var notAvaible = await _context.Bookings.AnyAsync(b =>
+            b.RoomId == booking.RoomId &&
+            b.BookingDate == booking.BookingDate &&
+            ((booking.StartTime >= b.StartTime && booking.StartTime < b.EndTime) ||
+                (booking.EndTime > b.StartTime && booking.EndTime <= b.EndTime) ||
+                (booking.StartTime <= b.StartTime && booking.EndTime >= b.EndTime)));
+        if (notAvaible) throw new InvalidOperationException("Room is being used by another booking");
 
         if (existingBooking.StatusId != 1) throw new InvalidOperationException("Only pending bookings can be updated");
         existingBooking.RoomId = booking.RoomId;
