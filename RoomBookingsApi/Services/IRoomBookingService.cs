@@ -12,4 +12,5 @@ public interface IRoomBookingService
     Task<BookingResponseDto> Add(AddBookingDto booking);
     Task<BookingResponseDto> Update(int id, UpdateBookingDto booking);
     Task<bool> Delete(int id);
+    Task<BookingResponseDto> ChangeStatus(int id, ChangeStatusDto changeStatus);
 }
