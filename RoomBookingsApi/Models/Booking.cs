@@ -2,10 +2,10 @@ namespace RoomBookingsApi.Models;
 
 public class Booking : BaseEntity
 {
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public User User { get; set; } = null!;
 
-    public Guid RoomId { get; set; }
+    public int RoomId { get; set; }
     public Room Room { get; set; } = null!;
 
     public DateOnly BookingDate { get; set; }
@@ -14,7 +14,7 @@ public class Booking : BaseEntity
 
     public string Purpose { get; set; } = string.Empty;
 
-    public Guid StatusId { get; set; }
+    public int StatusId { get; set; }
     public Status Status { get; set; } = null!;
 
     public List<BookingStatusHistory> StatusHistory { get; set; } = new();

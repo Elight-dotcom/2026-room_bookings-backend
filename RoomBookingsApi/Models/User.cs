@@ -2,7 +2,7 @@ namespace RoomBookingsApi.Models;
 
 public class User : BaseEntity
 {
-    public Guid RoleId { get; set; }
+    public int RoleId { get; set; }
     public Role Role { get; set; } = null!;
 
     public string NRP { get; set; } = string.Empty;

@@ -13,8 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register UserService
+// Register Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoomBookingService, RoomBookingService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+
 
 var app = builder.Build();
 

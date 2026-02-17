@@ -29,12 +29,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Status>().ToTable("Statuses");
         modelBuilder.Entity<BookingStatusHistory>().ToTable("BookingStatusHistories");
 
-        // Query filters for soft-delete (exclude IsDeleted == true)
-        modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsDeleted);
+        // Query filters for soft-delete
         modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
         modelBuilder.Entity<Room>().HasQueryFilter(r => !r.IsDeleted);
         modelBuilder.Entity<Booking>().HasQueryFilter(b => !b.IsDeleted);
-        modelBuilder.Entity<Status>().HasQueryFilter(s => !s.IsDeleted);
         modelBuilder.Entity<BookingStatusHistory>().HasQueryFilter(bsh => !bsh.IsDeleted);
 
         // Relationships
@@ -73,6 +71,35 @@ public class AppDbContext : DbContext
             .WithOne(bsh => bsh.Status)
             .HasForeignKey(bsh => bsh.StatusId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Data seeding
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = "Admin" },
+            new Role { Id = 2, Name = "Staff" },
+            new Role { Id = 3, Name = "Lecturer" },
+            new Role { Id = 4, Name = "Student" }
+        );
+
+        modelBuilder.Entity<Status>().HasData(
+            new Status { Id = 1, Name = "Pending" },
+            new Status { Id = 2, Name = "Approved" },
+            new Status { Id = 3, Name = "Rejected" },
+            new Status { Id = 4, Name = "Cancelled" }
+        );
+
+        modelBuilder.Entity<Room>().HasData(
+            new Room { Id = 1, Name = "SAW 01.01", Location = "SAW", Capacity = 120, Description = "projector, whiteboard, speaker", IsAvailable = true, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new Room { Id = 2, Name = "C 201", Location = "D4", Capacity = 90, Description = "projector, whiteboard", IsAvailable = true, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new Room { Id = 3, Name = "HH 101", Location = "D3", Capacity = 30, Description = "projector, whiteboard", IsAvailable = true, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new Room { Id = 4, Name = "HH 102", Location = "D3", Capacity = 30, Description = "whiteboard", IsAvailable = false, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User { Id = 1, Name = "Admin", Email = "admin@pens.ac.id", Password = "password", RoleId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new User { Id = 2, Name = "Egit", Email = "egit@pens.ac.id", Password = "password", RoleId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new User { Id = 3, Name = "Saki", Email = "saki@pens.ac.id", Password = "password", RoleId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+            new User { Id = 4, Name = "Toriq", Email = "toriq@pens.ac.id", Password = "password", RoleId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+        );
     }
 
     private void ApplyChanges()
@@ -83,16 +110,19 @@ public class AppDbContext : DbContext
         {
             var entity = (BaseEntity)entry.Entity;
 
+            // CreatedAt 
             if (entry.State == EntityState.Added)
             {
                 entity.CreatedAt = entity.CreatedAt == default ? now : entity.CreatedAt;
             }
 
+            // UpdatedAt
             if (entry.State == EntityState.Modified)
             {
                 entity.UpdatedAt = now;
             }
 
+            // Soft Delete
             if (entry.State == EntityState.Deleted)
             {
                 entity.IsDeleted = true;
@@ -102,6 +132,7 @@ public class AppDbContext : DbContext
         }
     }
 
+    // Override SaveChanges methods to apply changes
     public override int SaveChanges()
     {
         ApplyChanges();
@@ -125,6 +156,8 @@ public class AppDbContext : DbContext
         ApplyChanges();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
+
+
 
     public AppDbContext() { }
 }
